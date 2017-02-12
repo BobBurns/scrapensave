@@ -15,6 +15,10 @@ Usage ./scrapensave url
     	polite crawl delay milliseconds (default 500)
 ```
 
+Archive all web pages in domain www.example.com to ./Archive
+
+```./scrapeensave https://www.example.com```
+
 Spider and save links to file
 
 ```./scrapensave -n http://www.example.com > links.txt```
@@ -32,3 +36,14 @@ ScrapeNSave respects robots.txt
 
 ##**Installation**
 Precompiled binary for Mac 10.11.6 or greater in binaries folder
+
+Or make executable scrapensave with `go build`
+
+You will need package robotstxt
+
+```go get github.com/temoto/robotstxt```
+
+
+Inspired from Jack Danger's [gocrawler](https://github.com/JackDanger/gocrawler)
+Checkout [6brand.com](https://jdanger.com/)
+
