@@ -2,16 +2,18 @@
 A Web Scraper/Archiver written in Go.
 
 ##**Usage**
-```Usage ./scrapensave url```
-```  -a path```
-```    	archive path. Default ./Archive```
-```  -e file```
-```    	exclude file type from archive (ex. "txt|mov")```
-```  -f file```
-```    	file of links to archive```
-```  -n	do not archive
-```  -p milliseconds```
-```    	polite crawl delay milliseconds (default 500)```
+```
+Usage ./scrapensave url
+  -a path
+    	archive path. Default ./Archive
+  -e file
+    	exclude file type from archive (ex. "txt|mov")
+  -f file
+    	file of links to archive
+  -n	do not archive
+  -p milliseconds
+    	polite crawl delay milliseconds (default 500)
+```
 
 Spider and save links to file
 
