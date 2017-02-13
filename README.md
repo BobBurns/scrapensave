@@ -17,7 +17,7 @@ Usage ./scrapensave url
 
 Archive all web pages in domain www.example.com to ./Archive
 
-```./scrapeensave https://www.example.com```
+```./scrapensave https://www.example.com```
 
 Spider and save links to file
 
@@ -35,7 +35,7 @@ Exclude large files from Spidering or Archiving
 ScrapeNSave respects robots.txt
 
 ##**Installation**
-Precompiled binary for Mac 10.11.6 or greater in binaries folder
+Precompiled binaries for Mac (compiled on El Capitan 10.11.6) and Ubuntu (Compiled on Mint 18) in binaries folder
 
 Or make executable scrapensave with `go build`
 
