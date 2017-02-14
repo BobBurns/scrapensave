@@ -36,7 +36,11 @@ func savePage(base, uri string, httpBody io.Reader) error {
 		return err
 	}
 
-	savePath := base + full.Path
+	// handle root index
+	if full.Path == "/" || full.Path == "" {
+		full.Path = "/index.html"
+	}
+	savePath := base + "/" + full.Host + full.Path
 	err = os.MkdirAll(filepath.Dir(savePath), os.ModePerm)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error creating Path %s\n", err)
