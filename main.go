@@ -82,7 +82,7 @@ func (a *Archive) buildArchive() {
 	//check robots.txt
 	robots := &robotstxt.RobotsData{}
 	rgroup := &robotstxt.Group{}
-	resp, err := http.Get(seed + "/robots.txt")
+	resp, err := http.Get(seedUri.Scheme + "://" + seedUri.Host + "/robots.txt")
 	if err == nil {
 		robots, err = robotstxt.FromResponse(resp)
 		if err == nil {

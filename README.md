@@ -44,6 +44,9 @@ You will need package robotstxt
 ```go get github.com/temoto/robotstxt```
 
 
+**Caution**
+Running this program can fill up lots of disk space.  I would recommend mounting an external drive and giving scrapensave the full path of the drive with the -a option.
+
 Inspired from Jack Danger's [gocrawler](https://github.com/JackDanger/gocrawler)
 Checkout [6brand.com](https://jdanger.com/)
 
