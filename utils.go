@@ -24,7 +24,7 @@ func fixUrl(href, base string) string {
 	return uri.String()
 }
 
-func savePage(uri string, httpBody io.Reader) error {
+func savePage(base, uri string, httpBody io.Reader) error {
 	b, err := ioutil.ReadAll(httpBody)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error reading body ", err)
@@ -36,7 +36,7 @@ func savePage(uri string, httpBody io.Reader) error {
 		return err
 	}
 
-	savePath := PATH + full.Path
+	savePath := base + full.Path
 	err = os.MkdirAll(filepath.Dir(savePath), os.ModePerm)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error creating Path %s\n", err)

@@ -166,7 +166,7 @@ archive:
 				fmt.Fprintf(os.Stderr, "Error fetching %s to save.\n", link)
 				continue
 			}
-			err = savePage(link, body)
+			err = savePage(arch.ArchPath, link, body)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error with Save.\n")
 				continue
