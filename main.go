@@ -17,11 +17,16 @@ const AGENT string = "scrapensavebot/1.0"
 
 var visited = make(map[string]bool)
 
-func generator(link string) <-chan string {
+func generator(link string) (<-chan string, <-chan int64) {
 	c := make(chan string)
+	d := make(chan int64)
 	go func() {
-		body, err := fetch(link)
+		body, count, err := fetch(link)
 		if err == nil {
+			if count < 0 {
+				count = 0
+			}
+			d <- count
 			links := collectLinks(body)
 			for _, new := range links {
 				absolute := fixUrl(new, link)
@@ -29,8 +34,9 @@ func generator(link string) <-chan string {
 			}
 		}
 		close(c)
+		close(d)
 	}()
-	return c
+	return c, d
 }
 
 type Archive struct {
@@ -41,6 +47,7 @@ type Archive struct {
 	Delay    time.Duration
 	Allow    *robotstxt.Group
 	Domain   *regexp.Regexp
+	Bytes    int64
 	Links    []string
 }
 
@@ -138,7 +145,8 @@ func main() {
 	fmt.Fprintln(os.Stderr, "Scanning...")
 
 	for i := 0; i < len(arch.Links); i++ {
-		c := generator(arch.Links[i])
+		c, d := generator(arch.Links[i])
+		arch.Bytes += <-d // this will return first
 		for link := range c {
 			if !arch.Allow.Test(link) || !arch.Domain.MatchString(link) {
 				continue
@@ -157,11 +165,22 @@ func main() {
 		time.Sleep(arch.Delay)
 	}
 
+	fmt.Fprintln(os.Stderr)
+	fmt.Fprintf(os.Stderr, "Approximate bytes to archive = %d\n", arch.Bytes)
+	if !arch.Narchive {
+		answer := ""
+		fmt.Fprintf(os.Stderr, "Are you sure you still want to save? [Y/n] ")
+		fmt.Scanf("%s", &answer)
+		if answer == "n" {
+			arch.Narchive = true
+		}
+	}
+
 archive:
 	for _, link := range arch.Links {
 		// archive if n flag is not set
 		if !arch.Narchive {
-			body, err := fetch(link)
+			body, _, err := fetch(link)
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "Error fetching %s to save.\n", link)
 				continue

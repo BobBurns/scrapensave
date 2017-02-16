@@ -63,7 +63,7 @@ func savePage(base, uri string, httpBody io.Reader) error {
 	return nil
 }
 
-func fetch(uri string) (io.Reader, error) {
+func fetch(uri string) (io.Reader, int64, error) {
 	fmt.Fprintf(os.Stderr, "#")
 	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{
@@ -73,15 +73,15 @@ func fetch(uri string) (io.Reader, error) {
 	client := http.Client{Transport: transport}
 	req, err := http.NewRequest("GET", uri, nil)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	// more politeness
 	req.Header.Set("User-Agent", AGENT)
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
-	return resp.Body, nil
+	return resp.Body, resp.ContentLength, nil
 }
