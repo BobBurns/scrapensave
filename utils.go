@@ -9,6 +9,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"regexp"
 )
 
 func fixUrl(href, base string) string {
@@ -40,6 +41,12 @@ func savePage(base, uri string, httpBody io.Reader) error {
 	if full.Path == "/" || full.Path == "" {
 		full.Path = "/index.html"
 	}
+	// handle wordpress path html
+	direxp := regexp.MustCompile("/$")
+	if direxp.MatchString(full.Path) {
+		full.Path = full.Path[:len(full.Path)-1] + ".html"
+	}
+
 	savePath := base + "/" + full.Host + full.Path
 	err = os.MkdirAll(filepath.Dir(savePath), os.ModePerm)
 	if err != nil {
