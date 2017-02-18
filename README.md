@@ -49,7 +49,7 @@ Running this program can fill up lots of disk space.  I would recommend mounting
 
 **Caveats**
 
-You may want to change ```uname -n``` to meet a large number of file descriptors being open.
+You may want to change ```ulimit -n``` to meet a large number of file descriptors being open.
 
 
 Inspired from Jack Danger's [gocrawler](https://github.com/JackDanger/gocrawler)
