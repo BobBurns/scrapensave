@@ -34,7 +34,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-func collectLinks(httpBody io.Reader) []string {
+func collectLinks(httpBody io.ReadCloser) []string {
 	links := []string{}
 	col := []string{}
 	page := html.NewTokenizer(httpBody)

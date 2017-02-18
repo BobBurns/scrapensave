@@ -182,12 +182,12 @@ archive:
 		if !arch.Narchive {
 			body, _, err := fetch(link)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error fetching %s to save.\n", link)
+				fmt.Fprintf(os.Stderr, "Error fetching %s to save.\n[%s]\n", link, err)
 				continue
 			}
 			err = savePage(arch.ArchPath, link, body)
 			if err != nil {
-				fmt.Fprintf(os.Stderr, "Error with Save.\n")
+				fmt.Fprintf(os.Stderr, "Error with Save.\n[%s]\n", err)
 				continue
 			}
 			time.Sleep(arch.Delay)

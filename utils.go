@@ -26,8 +26,10 @@ func fixUrl(href, base string) string {
 	return uri.String()
 }
 
-func savePage(base, uri string, httpBody io.Reader) error {
+func savePage(base, uri string, httpBody io.ReadCloser) error {
 	b, err := ioutil.ReadAll(httpBody)
+	defer httpBody.Close()
+
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error reading body ", err)
 		return err
@@ -71,14 +73,14 @@ func savePage(base, uri string, httpBody io.Reader) error {
 	return nil
 }
 
-func fetch(uri string) (io.Reader, int64, error) {
+func fetch(uri string) (io.ReadCloser, int64, error) {
 	fmt.Fprintf(os.Stderr, "#")
 	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: true,
 		},
 	}
-	timeout := time.Duration(10 * time.Second)
+	timeout := time.Duration(30 * time.Second)
 	client := http.Client{Transport: transport, Timeout: timeout}
 	req, err := http.NewRequest("GET", uri, nil)
 	if err != nil {
