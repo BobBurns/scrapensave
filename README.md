@@ -45,11 +45,14 @@ You will need package robotstxt
 
 
 **Caution**
+
 Running this program can fill up lots of disk space.  I would recommend mounting an external drive and giving scrapensave the full path of the drive with the -a option.
+
+If errors occur when archiving, link urls will be appended to scrapensave.log
 
 **Caveats**
 
-You may want to change ```ulimit -n``` to meet a large number of file descriptors being open.
+When archiving a large number of files, you may want to change ```ulimit -n``` to meet a large number of file descriptors being open. I am using ```ulimit -n 15000``` on Ubuntu.
 
 
 Inspired from Jack Danger's [gocrawler](https://github.com/JackDanger/gocrawler)
