@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/temoto/robotstxt"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -32,6 +33,8 @@ func generator(link string) (<-chan string, <-chan int64) {
 				absolute := fixUrl(new, link)
 				c <- absolute
 			}
+		} else {
+			fmt.Fprintf(os.Stderr, "Error with fetching link: %s\n[%s]\n", link, err)
 		}
 		close(c)
 		close(d)
@@ -113,18 +116,30 @@ func (a *Archive) buildArchive() {
 	a.Delay = polite
 	a.Allow = rgroup
 	a.Domain = domain
-	a.Links = []string{seed}
+	if seed != "" {
+		a.Links = []string{seed}
+	}
 
 }
 
 func main() {
-	var linkReader *bufio.Reader
 
+	//Create log file
+	logfile, err := os.OpenFile("scrapensave.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	defer logfile.Close()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Cannot open scrapensave.log for writing. [%s]", err)
+		os.Exit(1)
+	}
+	logger := log.New(logfile, "scrapensave error: ", log.LstdFlags)
+
+	//get command line arguments
 	arch := Archive{}
 	arch.buildArchive()
 
 	// if f flag and file, archive only links from file
 	// first scan links to arch.Links
+	var linkReader *bufio.Reader
 	if arch.FilePath != "" {
 		linkFile, err := os.Open(arch.FilePath)
 		if err != nil {
@@ -182,11 +197,13 @@ archive:
 		if !arch.Narchive {
 			body, _, err := fetch(link)
 			if err != nil {
+				logger.Printf("Error with Fetch: [%s]\n%s\n", err, link)
 				fmt.Fprintf(os.Stderr, "Error fetching %s to save.\n[%s]\n", link, err)
 				continue
 			}
 			err = savePage(arch.ArchPath, link, body)
 			if err != nil {
+				logger.Printf("Error with Save: [%s]\n%s\n", err, link)
 				fmt.Fprintf(os.Stderr, "Error with Save.\n[%s]\n", err)
 				continue
 			}
