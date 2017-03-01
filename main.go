@@ -192,22 +192,38 @@ func main() {
 	}
 
 archive:
+	p := Page{}
 	for _, link := range arch.Links {
 		// archive if n flag is not set
 		if !arch.Narchive {
-			body, _, err := fetch(link)
+			linkUrl, err := url.Parse(link)
 			if err != nil {
-				logger.Printf("Error with Fetch: [%s]\n%s\n", err, link)
-				fmt.Fprintf(os.Stderr, "Error fetching %s to save.\n[%s]\n", link, err)
+				fmt.Fprintf(os.Stderr, "Bad url from file.[%s]\n", err)
 				continue
 			}
-			err = savePage(arch.ArchPath, link, body)
-			if err != nil {
-				logger.Printf("Error with Save: [%s]\n%s\n", err, link)
-				fmt.Fprintf(os.Stderr, "Error with Save.\n[%s]\n", err)
-				continue
+			p.Url = linkUrl
+			p.Link = link
+			p.Base = arch.ArchPath
+
+			fmt.Println(linkUrl.Scheme)
+			if linkUrl.Scheme == "ftp" {
+				// do something with ftp
+				os.Exit(0)
 			}
-			time.Sleep(arch.Delay)
+
+			err = p.FetchBody()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error fetching resources\n[%s]\n", err)
+				logger.Printf("Error fetching resources [%s]\n%s\n", err, p.Link)
+			}
+
+			err = p.UpdateHtml()
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error updating html[%s]\n%s\n", err, p.Link)
+				logger.Printf("Error updating html[%s]\n%s\n", err, p.Link)
+			}
+
+			p.SaveResources()
 		}
 
 		fmt.Println(link)
