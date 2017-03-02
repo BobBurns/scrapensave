@@ -207,8 +207,10 @@ archive:
 
 			fmt.Println(linkUrl.Scheme)
 			if linkUrl.Scheme == "ftp" {
+				fmt.Println("Processing ftp...")
+				getFtp(arch.ArchPath, linkUrl)
 				// do something with ftp
-				os.Exit(0)
+				continue
 			}
 
 			err = p.FetchBody()

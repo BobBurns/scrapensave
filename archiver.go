@@ -197,7 +197,6 @@ func (p *Page) SaveResources() {
 
 		// file exists so don't save it
 		if _, err := os.Stat(savep); !os.IsNotExist(err) {
-			fmt.Println("file exists!")
 			continue
 		}
 		//check robots txt
