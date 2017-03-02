@@ -10,7 +10,7 @@ import (
 )
 
 func getFtp(base string, ftplink *url.URL) {
-	server, err := ftp.Dial(ftplink.Host)
+	server, err := ftp.Dial(ftplink.Host + ":21")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Can not connect to ftp server.[%s]\n", err)
 		return
@@ -32,19 +32,24 @@ func getFtp(base string, ftplink *url.URL) {
 			fmt.Println(err)
 			return
 		}
-		entries, err := s.List("")
+		entries, err := s.List(dir)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+		//debug
+		for _, e := range entries {
+			fmt.Println(e.Name)
+			fmt.Println(e.Type)
+		}
 
 		for _, entry := range entries {
-			if entry.EntryType == ftp.EntryTypeFolder {
+			if entry.Type == ftp.EntryTypeFolder && !(entry.Name == "." || entry.Name == "..") {
 				walk(base, entry.Name, s)
 				continue
 			}
 
-			savep := base + "/ftp/" + ftplink.Host + ftplink.Path
+			savep := base + "/ftp/" + ftplink.Host + ftplink.Path + entry.Name
 
 			if _, err := os.Stat(savep); !os.IsNotExist(err) {
 				continue
@@ -79,8 +84,8 @@ func getFtp(base string, ftplink *url.URL) {
 			// if dir walk dir
 			// if file save
 		}
-		// start walk with current dir
-		walk(base, ftplink.Path, server)
 
 	}
+	// start walk with current dir
+	walk(base, ftplink.Path, server)
 }

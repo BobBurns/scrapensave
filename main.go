@@ -151,7 +151,10 @@ func main() {
 		scanner.Split(bufio.ScanLines)
 
 		for scanner.Scan() {
-			arch.Links = append(arch.Links, scanner.Text())
+			l := scanner.Text()
+			if l != "" {
+				arch.Links = append(arch.Links, scanner.Text())
+			}
 		}
 		goto archive
 	}
