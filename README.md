@@ -1,7 +1,11 @@
-#**ScrapeNSave**
+ScrapeNSave
+===========
+
 A Web Scraper/Archiver written in Go.
 
-##**Usage**
+Usage
+-----
+
 ```
 Usage ./scrapensave url
   -a path
@@ -17,31 +21,33 @@ Usage ./scrapensave url
 
 Archive all web pages in domain www.example.com to ./Archive
 
-```./scrapensave https://www.example.com```
+`./scrapensave https://www.example.com`
 
 Spider and save links to file
 
-```./scrapensave -n http://www.example.com > links.txt```
+`./scrapensave -n http://www.example.com > links.txt`
 
 or Archive from list of links
 
-```./scrapensave -f links.txt```
+`./scrapensave -f links.txt`
 
 Exclude large files from Spidering or Archiving
 
-```./scrapensave -e "mov|jpeg|mp3"```
+`./scrapensave -e "mov|jpeg|mp3"`
 
 
 ScrapeNSave respects robots.txt
 
-##**Installation**
+Installation
+------------
+
 Precompiled binaries for Mac (compiled on El Capitan 10.11.6) and Ubuntu (Compiled on Mint 18) in binaries folder
 
 Or make executable scrapensave with `go build`
 
 You will need package robotstxt
 
-```go get github.com/temoto/robotstxt```
+`go get github.com/temoto/robotstxt`
 
 
 **Caution**
